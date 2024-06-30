@@ -44,7 +44,7 @@ void Catan::generateMap() {
 
 int main() {
   int players = 4;
-  cout << "Welcome to The Settlers of Catan!\n";
+  cout << "Welcome to The Settlers of Catext!\n";
   cout << "Please enter the total number of players: ";
   // cin >> players;
   cout << "\nYour game will have " << players << " players.\n";
