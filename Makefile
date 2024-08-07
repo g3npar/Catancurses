@@ -34,7 +34,7 @@ EXECUTABLE  = catan
 # executable.cpp (substituted from EXECUTABLE above), or main.cpp
 PROJECTFILE = $(or $(wildcard project*.cpp $(EXECUTABLE).cpp), main.cpp)
 # If main() is in another file delete line above, edit and uncomment below
-#PROJECTFILE = mymainfile.cpp
+#PROJECTFILE = main.cpp
 
 # This is the path from the CAEN home folder to where projects will be
 # uploaded. (eg. /home/mmdarden/eecs281/project1)
@@ -70,7 +70,7 @@ SOURCES     := $(filter-out $(TESTSOURCES), $(SOURCES))
 OBJECTS     = $(SOURCES:%.cpp=%.o)
 
 # Default Flags
-CXXFLAGS = -std=c++17 -Wconversion -Wall -Werror -Wextra -pedantic
+CXXFLAGS = -std=c++17 -Wconversion -Wall -Werror -Wextra -pedantic -I/path/to/ncurses-6.1/include -L/path/to/ncurses-6.1/lib -lncurses
 
 # make debug - will compile sources with $(CXXFLAGS) -g3 and -fsanitize
 #              flags also defines DEBUG and _GLIBCXX_DEBUG
