@@ -6,8 +6,10 @@ enum Building {
   City
 };
 
+// will be used to mark settlements and cities
 struct Point;
 
+// will be used to mark roads
 struct Edge {
   Tile *upper = nullptr;
   Tile *lower = nullptr;

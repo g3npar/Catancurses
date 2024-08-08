@@ -15,6 +15,8 @@ class Catan {
     int start_x = 25;
     int start_y = 53;
 
+    // MODIFIES: ncurses
+    // EFFECTS: prints the initial hex
     void startHex();
   public:
     Catan(int np) : num_players(np) { }

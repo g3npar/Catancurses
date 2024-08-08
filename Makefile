@@ -1,49 +1,13 @@
-## EECS 281 Advanced Makefile
-
-# How to use this Makefile...
-###################
-###################
-##               ##
-##  $ make help  ##
-##               ##
-###################
-###################
-
-# IMPORTANT NOTES:
-#   1. Set EXECUTABLE to the command name from the project specification.
-#   2. To enable automatic creation of unit test rules, your program logic
-#      (where main() is) should be in a file named project*.cpp or
-#      specified in the PROJECTFILE variable.
-#   3. Files you want to include in your final submission cannot match the
-#      test*.cpp pattern.
-
-#######################
-# TODO (begin) #
-#######################
-# Change 'youruniqname' to match your UM uniqname (no quote marks).
 UNIQNAME    = parinr
 
-# Change the right hand side of the identifier to match the project identifier
-# given in the project or lab specification.
-IDENTIFIER  = 9B734EC0C043C5A836EA0EBE4BEFEA164490B2C7
-
-# Change 'executable' to match the command name given in the project spec.
 EXECUTABLE  = catan
 
 # The following line looks for a project's main() in files named project*.cpp,
 # executable.cpp (substituted from EXECUTABLE above), or main.cpp
 PROJECTFILE = $(or $(wildcard project*.cpp $(EXECUTABLE).cpp), main.cpp)
-# If main() is in another file delete line above, edit and uncomment below
-#PROJECTFILE = main.cpp
 
 # This is the path from the CAEN home folder to where projects will be
-# uploaded. (eg. /home/mmdarden/eecs281/project1)
-# Change this if you prefer a different path.
-# REMOTE_PATH := eecs281_$(EXECUTABLE)_sync  # /home/mmdarden/eecs281_proj0_sync
-REMOTE_PATH := eecs281_$(EXECUTABLE)_sync
-#######################
-# TODO (end) #
-#######################
+REMOTE_PATH := parinr$(EXECUTABLE)_sync
 
 # enables c++17 on CAEN or 281 autograder
 PATH := /usr/um/gcc-11.3.0/bin:$(PATH)
@@ -115,23 +79,6 @@ static:
 FULL_SUBMITFILE = fullsubmit.tar.gz
 PARTIAL_SUBMITFILE = partialsubmit.tar.gz
 UNGRADED_SUBMITFILE = ungraded.tar.gz
-
-# These files are excluded when checking for project identifier (no spaces!)
-NO_IDENTIFIER = xcode_redirect.hpp,getopt.h,getopt.c,xgetopt.h
-
-# make identifier - will check to ensure that all source code and header files
-#                   include the project identifier, skip subdirectories
-#                   also removes old submit tarballs, they are outdated
-identifier: $(foreach tsrc,$(TESTSOURCES),$(eval NO_IDENTIFIER := $(NO_IDENTIFIER),$(tsrc)))
-identifier:
-	@if [ $$(grep --include=*.{h,hpp,c,cpp} --exclude={$(NO_IDENTIFIER)} --directories=skip -L $(IDENTIFIER) * | wc -l) -ne 0 ]; then \
-		printf "Missing project identifier in file(s): "; \
-		echo `grep --include=*.{h,hpp,c,cpp} --exclude={$(NO_IDENTIFIER)} --directories=skip -L $(IDENTIFIER) *`; \
-		exit 1; \
-	else \
-		rm -f $(PARTIAL_SUBMITFILE) $(FULL_SUBMITFILE) $(UNGRADED_SUBMITFILE); \
-	fi
-.PHONY: identifier
 
 # Build all executables
 all: debug release
@@ -240,91 +187,9 @@ endif
 .PHONY: sync2caen
 
 define MAKEFILE_HELP
-EECS281 Advanced Makefile Help
-* This Makefile uses advanced techniques, for more information:
-    $$ man make
-
-* General usage
-    1. Follow directions at each "TODO" in this file.
-       a. Set EXECUTABLE equal to the name from the project specification.
-       b. Set PROJECTFILE equal to the name of the source file with main()
-       c. Add any dependency rules specific to your files.
-    2. Build, test, submit... repeat as necessary.
-
-* Preparing submissions
-    A) To build 'partialsubmit.tar.gz', a tarball without tests used to
-       find buggy solutions in the autograder.
-
-           *** USE THIS ONLY FOR TESTING YOUR SOLUTION! ***
-
-       This is useful for faster autograder runs during development and
-       free submissions if the project does not build.
-           $$ make partialsubmit
-    B) Build 'fullsubmit.tar.gz' a tarball complete with autograder test
-       files.
-
-           *** ALWAYS USE THIS FOR FINAL GRADING! ***
-
-       It is also useful when trying to find buggy solutions in the
-       autograder.
-           $$ make fullsubmit
-
-* Unit testing support
-    A) Source files for unit testing should be named test*.cpp.  Examples
-       include test_input.cpp or test3.cpp.
-    B) Automatic build rules are generated to support the following:
-           $$ make test_input
-           $$ make test3
-           $$ make alltests        (this builds all test drivers)
-    C) If test drivers need special dependencies, they must be added
-       manually.
-    D) IMPORTANT: NO SOURCE FILES WITH NAMES THAT BEGIN WITH test WILL BE
-       ADDED TO ANY SUBMISSION TARBALLS.
-
-* Static Analysis support
-    A) Matches current autograder style grading tests
-    B) Usage:
-           $$ make static
-
-* Sync to CAEN support
-    A) Requires an .ssh/config file with a login.engin.umich.edu host
-       defined, SSH Multiplexing enabled, and an open SSH connection.
-    B) Edit the REMOTE_BASEDIR variable if default is not preferred.
-    C) Usage:
-           $$ make sync2caen
 endef
 export MAKEFILE_HELP
 
 help:
 	@echo "$$MAKEFILE_HELP"
 .PHONY: help
-
-#######################
-# TODO (begin) #
-#######################
-# individual dependencies for objects
-# Examples:
-# "Add a header file dependency"
-# project2.o: project2.cpp project2.h
-#
-# "Add multiple headers and a separate class"
-# HEADERS = some.h special.h header.h files.h
-# myclass.o: myclass.cpp myclass.h $(HEADERS)
-# project5.o: project5.cpp myclass.o $(HEADERS)
-#
-# SOME EXAMPLES
-#
-#test_thing: test_thing.cpp class.o functions.o
-#class.o: class.cpp class.h
-#functions.o: functions.cpp functions.h
-#project0.o: project0.cpp class.h functions.h
-#
-# THE COMPILER CAN GENERATE DEPENDENCIES FROM SOURCE CODE
-#
-# % g++ -std=c++17 -MM *.cpp
-#
-# ADD YOUR OWN DEPENDENCIES HERE
-
-######################
-# TODO (end) #
-######################

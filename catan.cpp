@@ -1,5 +1,4 @@
 #include "catan.h"
-using namespace std;
 
 void Catan::startHex() {
   move(start_x, start_y);
@@ -23,11 +22,13 @@ void Catan::printMap() {
 }
 
 int main() {
+  // initializing ncurses and the Catan class
   Catan catan(4);
   initscr();
   start_color();
   refresh();
 
+  // creating game logo
   init_pair(1, COLOR_YELLOW, COLOR_BLACK);
   init_pair(2, COLOR_RED, COLOR_BLACK);
   init_pair(3, COLOR_WHITE, COLOR_BLACK);
@@ -53,14 +54,14 @@ int main() {
   attron(COLOR_PAIR(3));
   catan.printMap();
 
+  // creating the map interface
   int x, y;
   getmaxyx(stdscr, y, x);
-
   WINDOW *map = nullptr;
   map = newwin(40, 100, (y / 2) - 20, (x / 2) - 50);
   box(map, 0, 0);
   wrefresh(map);
-
+  
   getch();
   endwin();
   return 0;

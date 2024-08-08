@@ -46,8 +46,12 @@ class Island {
       return root_tile;
     }
 
+    // MODIFIES: root_tile
+    // EFFECTS: creates a hexagonal map of Edges and Points and sets root_tile
     void createMap();
 
+    // MODIFIES: root_tile
+    // EFFECTS: deletes map and sets root_tile to nullptr
     void deleteMap(Tile* tile, std::unordered_set<Tile*>& visited);
 };
 

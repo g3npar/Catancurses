@@ -1,5 +1,4 @@
 #include "island.h"
-using namespace std;
 
 int mod(int a, int b) {
   return ((a % b) + b) % b;
@@ -76,13 +75,13 @@ void Island::createMap() {
         if (t->tiles[dir] != nullptr) 
           continue;
 
-        // Genreate New Tile
+        // generate New Tile
         Tile* newTile = generateTile();
         t->tiles[dir] = newTile;
         newTile->tiles[mod(dir + 3, 6)] = t; 
         generatedTiles.push_back(newTile);
 
-        // Set previous tiles to match
+        // set previous tiles to match
         auto counterClockwise = mod(dir - 1, 6);
         auto clockwise = mod(dir + 1, 6);
 
