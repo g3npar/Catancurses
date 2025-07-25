@@ -1,5 +1,5 @@
 (basic layout of the map, need to implement this in ncurses)
-Welcome to The Settlers of Catext!
+Welcome to The Settlers of Catancurses!
 Please enter the total number of players: 
 Your game will have 4 players.
                               /  \                                      ----LEGEND----

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the directory containing your Catan code and executable
-CODE_DIR="/home/parinr/catan"
+CODE_DIR="/home/parinr/catancurses"
 CATAN_FILE="${CODE_DIR}/catan"
 
 # Function to compile and run the Catan file
