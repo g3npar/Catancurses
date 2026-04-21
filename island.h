@@ -3,8 +3,10 @@
 
 #include <unordered_set>
 #include <vector>
+#include <map>
 #include "randNum.h"
 #include "edge.h"
+#include "coordinates.h"
 #include <stdexcept>
 using namespace std;
 
@@ -21,16 +23,12 @@ class Island {
     int grain_count = 4;
     int wool_count = 4;
     int IDX = 0;
+    vector<pair<int, int>> empty_spaces;
+    map<pair<int, int>, Tile*> coord_to_tile;  // Maps (q,r) to Tile pointer
+    vector<Tile*> all_tiles;  // List of all tiles for easy iteration
 
-    // REQUIRES: at least one resource count is above 0
-    // EFFECTS: returns a random resource and then updates its respective count
     Resource generateResource();
-
-    // REQUIRES: rolls isn't empty
-    // MODIFIES: rolls
-    // EFFECTS: returns a random roll number and then deletes it from rolls
     int generateRoll();
-
     Tile* generateTile();
   public:
     Island() { 
@@ -46,12 +44,31 @@ class Island {
       return root_tile;
     }
 
-    // MODIFIES: root_tile
-    // EFFECTS: creates a hexagonal map of Edges and Points and sets root_tile
-    void createMap();
+    void addEmptySpace(int y, int x) {
+      empty_spaces.push_back({y, x});
+    }
 
-    // MODIFIES: root_tile
-    // EFFECTS: deletes map and sets root_tile to nullptr
+    const vector<pair<int, int>>& getEmptySpaces() const {
+      return empty_spaces;
+    }
+
+    void clearEmptySpaces() {
+      empty_spaces.clear();
+    }
+    
+    // Coordinate system methods
+    Tile* getTileAt(int q, int r) {
+      auto it = coord_to_tile.find({q, r});
+      return (it != coord_to_tile.end()) ? it->second : nullptr;
+    }
+    
+    const vector<Tile*>& getAllTiles() const {
+      return all_tiles;
+    }
+    
+    void printCoordinateMap();  // Debug function to print all coordinates
+
+    void createMap();
     void deleteMap(Tile* tile, std::unordered_set<Tile*>& visited);
 };
 

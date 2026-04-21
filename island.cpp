@@ -46,7 +46,7 @@ Resource Island::generateResource() {
     }
   }
   return Resource::None;
-} // generateResource()
+}
 
 int Island::generateRoll() {
   if (rolls.size() - 1 == 0)
@@ -55,7 +55,7 @@ int Island::generateRoll() {
   int val = rolls[i];
   rolls.erase(rolls.begin() + i);
   return val;
-} // generateRoll()
+}
 
 Tile* Island::generateTile() {
   Resource r = generateResource();
@@ -66,8 +66,20 @@ Tile* Island::generateTile() {
 void Island::createMap() {
   if (layer_count < 1)
     throw std::invalid_argument("Layers must be 1 or more");
+  
   root_tile = generateTile();
+  root_tile->q = 0;  // Center tile at origin (0, 0)
+  root_tile->r = 0;
+  coord_to_tile[{0, 0}] = root_tile;
+  all_tiles.push_back(root_tile);
+  
   std::vector<Tile *> outerRing = {root_tile};
+  
+  // Direction vectors for axial coordinates
+  // N: (0, -1), NE: (+1, -1), SE: (+1, 0), S: (0, +1), SW: (-1, +1), NW: (-1, 0)
+  int dq[] = {0, 1, 1, 0, -1, -1};  // q offset for each direction
+  int dr[] = {-1, -1, 0, 1, 1, 0};  // r offset for each direction
+  
   for (int layer = 1; layer < layer_count; layer++) {
     std::vector<Tile *> generatedTiles;
     for (const auto &t : outerRing) {
@@ -75,13 +87,31 @@ void Island::createMap() {
         if (t->tiles[dir] != nullptr) 
           continue;
 
-        // generate New Tile
-        Tile* newTile = generateTile();
+        // Calculate new tile coordinates based on direction
+        int new_q = t->q + dq[dir];
+        int new_r = t->r + dr[dir];
+        
+        // Check if tile already exists at this coordinate
+        auto coord_key = std::make_pair(new_q, new_r);
+        Tile* newTile = nullptr;
+        
+        if (coord_to_tile.find(coord_key) != coord_to_tile.end()) {
+          // Tile already exists, use it
+          newTile = coord_to_tile[coord_key];
+        } else {
+          // Generate new tile
+          newTile = generateTile();
+          newTile->q = new_q;
+          newTile->r = new_r;
+          coord_to_tile[coord_key] = newTile;
+          all_tiles.push_back(newTile);
+          generatedTiles.push_back(newTile);
+        }
+        
         t->tiles[dir] = newTile;
         newTile->tiles[mod(dir + 3, 6)] = t; 
-        generatedTiles.push_back(newTile);
 
-        // set previous tiles to match
+        // Set previous tiles to match
         auto counterClockwise = mod(dir - 1, 6);
         auto clockwise = mod(dir + 1, 6);
 
@@ -110,7 +140,7 @@ void Island::createMap() {
     }
     outerRing = generatedTiles;
   }
-} // createMap()
+}
 
 void Island::deleteMap(Tile* tile, std::unordered_set<Tile*>& visited) {
   // If tile is nullptr or already visited, return
@@ -122,4 +152,4 @@ void Island::deleteMap(Tile* tile, std::unordered_set<Tile*>& visited) {
       deleteMap(neighbor, visited);
   }
   delete tile;
-} // deleteMap()
+}

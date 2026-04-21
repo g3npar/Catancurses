@@ -22,6 +22,10 @@ struct Tile {
   int roll;
   int idx;
   
+  // Axial coordinates for hexagonal grid
+  int q = 0;  // column coordinate
+  int r = 0;  // row coordinate
+  
   bool robber = false;
   std::vector<Tile*> tiles = {
     nullptr, // N
